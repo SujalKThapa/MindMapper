@@ -1,21 +1,20 @@
-import logging
-import azure.functions as func
-from PyPDF2 import PdfFileReader
-import io
+import pymupdf
+def print_hi(name):
+    # Use a breakpoint in the code line below to debug your script.
+    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
-    logging.info('Python HTTP trigger function processed a request.')
+def returnText(fileName):
+    pdfDocument = pymupdf.open(fileName)
+    extractedText = []
+    for pageNum in range(pdfDocument.page_count):
+        page = pdfDocument.load_page(pageNum)
+        text = page.get_text()
+        extractedText.append(text)
+    extractedText.remove("")
+    print(extractedText)
 
-    try:
-        # Get the file from the request
-        pdf_file = req.files['file']
-        pdf_reader = PdfFileReader(io.BytesIO(pdf_file.read()))
 
-        # Example: Extract number of pages
-        num_pages = pdf_reader.getNumPages()
-        response_message = f"The PDF file has {num_pages} pages."
+if __name__ == '__main__':
+    returnText("Placeholder.pdf")
 
-        return func.HttpResponse(response_message, status_code=200)
-    except Exception as e:
-        logging.error(f"Error processing PDF file: {e}")
-        return func.HttpResponse("Failed to process PDF file.", status_code=400)
+# See PyCharm help at https://www.jetbrains.com/help/pycharm/
