@@ -1,4 +1,5 @@
 import pymupdf
+import graphviz
 import os
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
@@ -30,10 +31,52 @@ def returnText(fileName):
     fullText = "\n".join(extractedText)
     return generateData(fullText)
 
+def replace_every_fourth_space(input_string):
+    space_count = 0
+    output_string = ""
+
+    for char in input_string:
+        if char == ' ':
+            space_count += 1
+            if space_count == 3:
+                output_string += '&#92;n'
+                space_count = 0
+            else:
+                output_string += char
+        else:
+            output_string += char
+
+    return output_string
+
 
 if __name__ == '__main__':
     print(os.environ['GOOGLE_API_key'])
     responseText = returnText("Placeholder.pdf")
     print(responseText)
+    dot = graphviz.Digraph(format='png')
+    allResponses = responseText.split('\n')
+    allResponses[0] = allResponses[0].replace("## Title: ","")
+    dot.node('Title', label=allResponses[0], shape="record")
+    for i in range(1, len(allResponses)):
+        if("**Section: " in allResponses[i]):
+            allResponses[i] = allResponses[i].removeprefix("**Section: ")
+            allResponses[i] = allResponses[i].removesuffix("**")
+            lastSectionName = allResponses[i]
+            if("Summary: " in allResponses[i+1]):
+                allResponses[i+1] = allResponses[i+1].removeprefix("Summary: ")
+                allResponses[i+1] = replace_every_fourth_space(allResponses[i+1])
+                print(allResponses[i+1])
+            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i+1]}", shape="record")
+            dot.edge('Title', allResponses[i])
+    dot.attr(size="18,12!")
+    dot.render('file1', format='png', cleanup=True)
+
+    # Example of a Graph made using GraphViz.
+    # dot.node('A', 'Node 1')
+    # dot.node('B', 'Node 2')
+    # dot.node('C', 'Node 3')
+    # dot.edge('A', 'B')
+    # dot.edge('A', 'C')
+    # dot.render('file1', format='png', cleanup=True)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
