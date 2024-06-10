@@ -34,18 +34,19 @@ def returnText(fileName):
 def replace_every_fourth_space(input_string):
     space_count = 0
     output_string = ""
-
+    charCount = 0
     for char in input_string:
+        charCount += 1
         if char == ' ':
             space_count += 1
-            if space_count == 3:
+            if charCount > 35:
                 output_string += '&#92;n'
-                space_count = 0
+                charCount = 0
             else:
                 output_string += char
         else:
             output_string += char
-
+    output_string += '&#92;n&#92;n'
     return output_string
 
 
@@ -54,9 +55,16 @@ if __name__ == '__main__':
     responseText = returnText("Placeholder.pdf")
     print(responseText)
     dot = graphviz.Digraph(format='png')
+    dot.attr(ranksep='1.0')
     allResponses = responseText.split('\n')
     allResponses[0] = allResponses[0].replace("## Title: ","")
-    dot.node('Title', label=allResponses[0], shape="record")
+    nodeAttr = {
+        "style": "filled",
+        "color": "brown1",
+        "fontcolor": "white",
+        "fontname": "Arial"
+    }
+    dot.node('Title', label=allResponses[0], shape="record",_attributes=nodeAttr)
     for i in range(1, len(allResponses)):
         if("**Section: " in allResponses[i]):
             allResponses[i] = allResponses[i].removeprefix("**Section: ")
@@ -65,10 +73,26 @@ if __name__ == '__main__':
             if("Summary: " in allResponses[i+1]):
                 allResponses[i+1] = allResponses[i+1].removeprefix("Summary: ")
                 allResponses[i+1] = replace_every_fourth_space(allResponses[i+1])
-                print(allResponses[i+1])
-            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i+1]}", shape="record")
-            dot.edge('Title', allResponses[i])
-    dot.attr(size="18,12!")
+            nodeAttr = {
+                "style":"filled",
+                "color":"dodgerblue",
+                "fontcolor": "white",
+                "fontname": "Arial"
+            }
+            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i+1]}", shape="record", _attributes=nodeAttr)
+            edgeAttr = {
+                "tailport":'s'
+            }
+            dot.edge('Title', allResponses[i], _attributes=edgeAttr)
+        elif("**Sub-Section: " in allResponses[i]):
+            allResponses[i] = allResponses[i].removeprefix("**Sub-Section: ")
+            allResponses[i] = allResponses[i].removesuffix("**")
+            if ("Summary: " in allResponses[i + 1]):
+                allResponses[i + 1] = allResponses[i + 1].removeprefix("Summary: ")
+                allResponses[i + 1] = replace_every_fourth_space(allResponses[i + 1])
+            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i + 1]}", shape="record")
+            dot.edge(lastSectionName, allResponses[i])
+    dot.attr(size="25,25!")
     dot.render('file1', format='png', cleanup=True)
 
     # Example of a Graph made using GraphViz.
