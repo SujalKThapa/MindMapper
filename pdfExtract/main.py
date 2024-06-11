@@ -1,6 +1,7 @@
 import pymupdf
 import graphviz
 import os
+from PIL import Image
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import StrOutputParser
@@ -13,7 +14,7 @@ def print_hi(name):
 def generateData(extractedText):
     model = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     messages = [SystemMessage(
-        content="Generate a title for this data, classify the data into sections as you see fit (and if the subject matter is really complex, into sub-sections) with summaries for the bottom level section/subsection. For ex:\n## Title: <Title>\n**Section: <Section Name>**\n Summary: <Section Summary>.\n**Section: <Section Name>**\nSummary: <Section Summary>\nSub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n Sub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n**Section: <Section Name>**\nSummary: <Section Summary>\n"),
+        content="Generate a title for this data, classify the data into sections as you see fit (and if the subject matter is really complex, into sub-sections) with summaries for the bottom level section/subsection. (Note: Try to maximize the number of sub-sections when summarizing.) For ex:\n## Title: <Title>\n**Section: <Section Name>**\n Summary: <Section Summary>.\n**Section: <Section Name>**\nSummary: <Section Summary>\nSub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n Sub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n**Section: <Section Name>**\nSummary: <Section Summary>\n"),
         HumanMessage(content=extractedText)
     ]
     result = model.invoke(messages)
@@ -50,10 +51,8 @@ def replace_every_fourth_space(input_string):
     return output_string
 
 
-if __name__ == '__main__':
-    print(os.environ['GOOGLE_API_key'])
-    responseText = returnText("Placeholder.pdf")
-    print(responseText)
+def processPDF(filepath):
+    responseText = returnText(filepath)
     dot = graphviz.Digraph(format='png')
     dot.attr(ranksep='1.0')
     allResponses = responseText.split('\n')
@@ -75,7 +74,7 @@ if __name__ == '__main__':
                 allResponses[i+1] = replace_every_fourth_space(allResponses[i+1])
             nodeAttr = {
                 "style":"filled",
-                "color":"dodgerblue",
+                "color":"slateblue4",
                 "fontcolor": "white",
                 "fontname": "Arial"
             }
@@ -90,10 +89,18 @@ if __name__ == '__main__':
             if ("Summary: " in allResponses[i + 1]):
                 allResponses[i + 1] = allResponses[i + 1].removeprefix("Summary: ")
                 allResponses[i + 1] = replace_every_fourth_space(allResponses[i + 1])
-            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i + 1]}", shape="record")
-            dot.edge(lastSectionName, allResponses[i])
+            nodeAttr = {
+                "style": "filled",
+                "color": "darkslategray",
+                "fontcolor": "white",
+                "fontname": "Arial"
+            }
+            dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i + 1]}", shape="record", _attributes=nodeAttr)
+            dot.edge(lastSectionName, allResponses[i], _attributes=edgeAttr)
     dot.attr(size="25,25!")
     dot.render('file1', format='png', cleanup=True)
+    img = Image.open('file1.png')
+    return img
 
     # Example of a Graph made using GraphViz.
     # dot.node('A', 'Node 1')
