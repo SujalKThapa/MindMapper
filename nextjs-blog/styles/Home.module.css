@@ -1,0 +1,107 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.githubIcon {
+  width: 30px;
+  height: 30px;
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 60px; /* Adjust to prevent overlap with header */
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.image {
+  width: 300px;
+  height: auto;
+  margin-left: 20px;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.mainTitle {
+  font-size: 3rem;
+  font-weight: bold;
+  color: mediumslateblue;
+  text-align: left;
+}
+
+.subTitle {
+  margin-top: -0.02rem;
+  text-align: left;
+}
+
+.subTitle2 {
+  margin-top: -0.5rem;
+  text-align: justify;
+}
+
+.uploadButton {
+  background-color: midnightblue;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.uploadButton:hover {
+  background-color: darkslateblue;
+}
+
+@media (max-width: 900px) {
+  .content {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .image {
+    margin-top: 0.5rem;
+    margin-left: 0;
+    margin-bottom: 20px;
+  }
+
+  .textBlock {
+    align-items: center;
+    text-align: center;
+  }
+
+  .mainTitle,
+  .subTitle,
+  .subTitle2 {
+    text-align: center;
+  }
+}
