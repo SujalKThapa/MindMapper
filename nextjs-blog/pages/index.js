@@ -1,6 +1,24 @@
 import Head from 'next/head';
 import styles from '../styles/Home.module.css';
 
+
+const handleButtonClick = () => {
+  console.log("Okay till here");
+  document.getElementById('pdfUpload').click();
+};
+
+const handleFileChange = (event) => {
+  console.log('Being accessed.');
+  const file = event.target.files[0];
+  if (file && file.type == 'application/pdf') {
+    console.log('PDF file selected: ', file);
+  }
+  else{
+    alert('Please select a PDF file')
+  }
+}
+
+
 export default function Home() {
   return (
     <div className={styles.container}>
@@ -27,7 +45,14 @@ export default function Home() {
             <h3 className={styles.subTitle2}>
               Seamless summarization and transformation<br/>of your personal, educational and business<br/>documents into easy-to-digest Mind Maps.
             </h3>
-            <button className={styles.uploadButton}>Upload PDF</button>
+            <button className={styles.uploadButton} onClick={handleButtonClick}>Upload PDF</button>
+            <input
+            type='file'
+            id='pdfUpload'
+            accept='application/pdf'
+            style={{display:'none'}}
+            onChange={handleFileChange}
+            />
           </div>
           <img src='https://i.postimg.cc/TPy6QKBp/Pdf2-Mind-Map.png' className={styles.image}/>
         </div>
