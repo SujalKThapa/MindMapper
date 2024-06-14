@@ -7,14 +7,33 @@ const handleButtonClick = () => {
   document.getElementById('pdfUpload').click();
 };
 
-const handleFileChange = (event) => {
+const handleFileChange = async (event) => {
   console.log('Being accessed.');
   const file = event.target.files[0];
-  if (file && file.type == 'application/pdf') {
+  if (file && file.type === 'application/pdf') {
     console.log('PDF file selected: ', file);
-  }
-  else{
-    alert('Please select a PDF file')
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('name', 'Sujal');
+
+    try {
+      const response = await fetch('https://pdf2mindmap.azurewebsites.net/api/http_trigger?code=UhGyUnXJIr6J1ne7KrZOvUdfnWJOFi6en89oB9nosmxNAzFu8ndD8g%3D%3D', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('File uploaded successfully: ', result);
+      } else {
+        console.error('Error uploading file: ', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error uploading file: ', error);
+    }
+  } else {
+    alert('Please select a PDF file');
   }
 }
 

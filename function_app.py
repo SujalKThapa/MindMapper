@@ -33,7 +33,7 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
                 try:
                     image_base64 = processPDF(temp_path)
                     response_body = f"<img src='data:image/png;base64,{image_base64}' alt='Generated Image' />"
-                    return func.HttpResponse(response_body, mimetype='text/html')
+                    return func.HttpResponse(response_body, mimetype='text/html', status_code=200)
                 except Exception as e:
                     logging.error(f"Error processing PDF: {e}")
                     return func.HttpResponse("An error occurred while processing the PDF.", status_code=500)
