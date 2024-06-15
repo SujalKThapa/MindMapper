@@ -1,11 +1,13 @@
 import azure.functions as func
 import logging
-from werkzeug.datastructures import FileStorage
+import json
 from werkzeug.utils import secure_filename
-import tempfile
+import os
 from main import processPDF  # Import the processPDF function
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.FUNCTION)
+
+TEMP_DIR = "/tmp"  # Define a temporary directory within the container
 
 @app.route(route="http_trigger", methods=["POST"])
 def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
@@ -22,21 +24,30 @@ def http_trigger(req: func.HttpRequest) -> func.HttpResponse:
                 if file.content_type != 'application/pdf':
                     return func.HttpResponse("Only PDF files are allowed.", status_code=400)
                 
-                # Secure the filename and create a temporary file
+                # Secure the filename and create a file path within the container
                 filename = secure_filename(file.filename)
-                with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-                    temp_path = tmp_file.name
-                    tmp_file.write(file.read())
+                file_path = os.path.join(TEMP_DIR, filename)
+                
+                with open(file_path, 'wb') as f:
+                    f.write(file.read())
+                
+                logging.info(f"File saved to: {file_path}")
 
-                # Process the file using the processPDF function
-                logging.info(f"File saved to temporary location: {temp_path}")
                 try:
-                    image_base64 = processPDF(temp_path)
-                    response_body = f"<img src='data:image/png;base64,{image_base64}' alt='Generated Image' />"
-                    return func.HttpResponse(response_body, mimetype='text/html', status_code=200)
+                    image_base64 = processPDF(file_path)
+                    response_body = {
+                        "image_html": f"<img src='data:image/png;base64,{image_base64}' alt='Generated Image' />"
+                    }
+                    return func.HttpResponse(json.dumps(response_body), mimetype='application/json', status_code=200)
                 except Exception as e:
                     logging.error(f"Error processing PDF: {e}")
                     return func.HttpResponse("An error occurred while processing the PDF.", status_code=500)
+                finally:
+                    try:
+                        os.remove(file_path)
+                        logging.info(f"Temporary file {file_path} deleted successfully.")
+                    except Exception as cleanup_error:
+                        logging.error(f"Error deleting temporary file {file_path}: {cleanup_error}")
                 
             else:
                 return func.HttpResponse("No file uploaded.", status_code=400)

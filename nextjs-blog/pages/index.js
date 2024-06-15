@@ -18,7 +18,7 @@ const handleFileChange = async (event) => {
     formData.append('name', 'Sujal');
 
     try {
-      const response = await fetch('https://pdf2mindmap.azurewebsites.net/api/http_trigger?code=UhGyUnXJIr6J1ne7KrZOvUdfnWJOFi6en89oB9nosmxNAzFu8ndD8g%3D%3D', {
+      const response = await fetch('https://mindmapconverter.agreeablesmoke-94d8f4cf.eastus.azurecontainerapps.io/api/http_trigger?code=Vah2HQvHTNBucLKepYzKtRicsFYQagyq4H4f6eWoxAnpAzFunKTPtQ%3D%3D', {
         method: 'POST',
         body: formData
       });

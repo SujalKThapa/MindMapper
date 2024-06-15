@@ -7,6 +7,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_core.output_parsers import StrOutputParser
 import tempfile
+import logging
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
@@ -100,11 +101,15 @@ def processPDF(filepath):
             dot.node(allResponses[i], label=f"{allResponses[i]}&#92;n&#92;n{allResponses[i + 1]}", shape="record", _attributes=nodeAttr)
             dot.edge(lastSectionName, allResponses[i], _attributes=edgeAttr)
     dot.attr(size="25,25!")
-    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
-        temp_file.close()
-        dot.render(temp_file.name, format='png', cleanup=True)
-        with open(temp_file.name, 'rb') as image_file:
-            img_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+    output_filepath = f"{filepath}_output"
+        
+    dot.render(output_filepath, format='png', cleanup=True)
+    logging.info(f"Graph rendered to file: {output_filepath}.png")
+        
+    with open(f"{output_filepath}.png", 'rb') as image_file:
+        img_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+    # Cleanup the generated output file
+    os.remove(f"{output_filepath}.png")
     return img_base64
 
     # Example of a Graph made using GraphViz.
