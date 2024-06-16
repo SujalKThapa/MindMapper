@@ -1,14 +1,14 @@
 import Head from 'next/head';
+import { useState, useEffect } from 'react';
 import styles from '../styles/Home.module.css';
 
-
 const handleButtonClick = () => {
-  console.log("Okay till here");
+  console.log("Button clicked");
   document.getElementById('pdfUpload').click();
 };
 
-const handleFileChange = async (event) => {
-  console.log('Being accessed.');
+const handleFileChange = async (event, showResult, imageHtml) => {
+  console.log('File input changed');
   const file = event.target.files[0];
   if (file && file.type === 'application/pdf') {
     console.log('PDF file selected: ', file);
@@ -26,6 +26,9 @@ const handleFileChange = async (event) => {
       if (response.ok) {
         const result = await response.json();
         console.log('File uploaded successfully: ', result);
+        if (result.image_html && result.image_html !== imageHtml) {
+          showResult(result.image_html);
+        }
       } else {
         console.error('Error uploading file: ', response.statusText);
       }
@@ -35,10 +38,30 @@ const handleFileChange = async (event) => {
   } else {
     alert('Please select a PDF file');
   }
-}
-
+};
 
 export default function Home() {
+  const [imageHtml, setImageHtml] = useState('');
+  const [isResultVisible, setIsResultVisible] = useState(false);
+
+  const showResult = (html) => {
+    console.log("Setting result HTML");
+    setImageHtml(html);
+    setIsResultVisible(true);
+  };
+
+  // Added useEffect to prevent infinite re-renders
+  useEffect(() => {
+    console.log("Home component mounted");
+    return () => {
+      console.log("Home component unmounted");
+    };
+  }, []);
+
+  console.log("Rendering Home Component");
+  console.log("isResultVisible:", isResultVisible);
+  console.log("imageHtml:", imageHtml);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -66,16 +89,24 @@ export default function Home() {
             </h3>
             <button className={styles.uploadButton} onClick={handleButtonClick}>Upload PDF</button>
             <input
-            type='file'
-            id='pdfUpload'
-            accept='application/pdf'
-            style={{display:'none'}}
-            onChange={handleFileChange}
+              type='file'
+              id='pdfUpload'
+              accept='application/pdf'
+              style={{display:'none'}}
+              onChange={(event) => handleFileChange(event, showResult, imageHtml)}
             />
           </div>
           <img src='https://i.postimg.cc/TPy6QKBp/Pdf2-Mind-Map.png' className={styles.image}/>
         </div>
       </main>
+
+      {isResultVisible && (
+        <div className={styles.resultBlock}>
+          <h3>Result:</h3>
+          {imageHtml && <div className={styles.innerImg} dangerouslySetInnerHTML={{ __html: imageHtml }} />}
+          <button className={styles.anotherButton}>Another Action</button>
+        </div>
+      )}
       
       <style jsx global>{`
         html,

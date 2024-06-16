@@ -82,6 +82,33 @@
   background-color: darkslateblue;
 }
 
+
+/* styles/Home.module.css */
+.imageContainer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.imageContainer h2 {
+  margin-bottom: 1rem;
+}
+
+.imageContainer img {
+  max-width: 100%;
+  height: auto;
+}
+
+.innerImg img {
+  max-width: 900px;
+  height: auto;
+}
+
+
+.resultBlock{
+  margin-top: 2.5rem;
+}
+
+
 @media (max-width: 900px) {
   .content {
     flex-direction: column;
@@ -103,5 +130,9 @@
   .subTitle,
   .subTitle2 {
     text-align: center;
+  }
+
+  .innerImg img {
+    max-width: 350px;
   }
 }

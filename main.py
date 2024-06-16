@@ -31,7 +31,13 @@ def returnText(fileName):
         page = pdfDocument.load_page(pageNum)
         text = page.get_text()
         extractedText.append(text)
-    extractedText.remove("")
+    if "" in extractedText:
+        extractedText.remove("")
+
+    if not extractedText:
+        logging.warning("No text extracted from the PDF.")
+        return ""
+    
     fullText = "\n".join(extractedText)
     return generateData(fullText)
 
