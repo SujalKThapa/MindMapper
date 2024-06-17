@@ -17,7 +17,7 @@ def print_hi(name):
 def generateData(extractedText):
     model = ChatGoogleGenerativeAI(model="gemini-1.5-flash")
     messages = [SystemMessage(
-        content="Generate a title for this data, classify the data into sections as you see fit (and if the subject matter is really complex, into sub-sections) with summaries for the bottom level section/subsection. (Note: Always try to maximize the number of sub-sections and prefer summaries with a greater weight placed on the number of sub-sections rather than the number of sections) For ex:\n## Title: <Title>\n**Section: <Section Name>**\n Summary: <Section Summary>.\n**Section: <Section Name>**\nSummary: <Section Summary>\nSub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n Sub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n**Section: <Section Name>**\nSummary: <Section Summary>\n"),
+        content="Generate a title for this data, classify the data into sections as you see fit (and if the subject matter is really complex, into sub-sections) with summaries for the bottom level section/subsection. (Note: Always try to maximize the number of sub-sections and prefer summaries with a greater weight placed on the number of sub-sections rather than the number of sections) MUST FOLLOW THE FORMAT:\n## Title: <Title>\n**Section: <Section Name>**\n Summary: <Section Summary>.\n**Section: <Section Name>**\nSummary: <Section Summary>\nSub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n Sub-Section: <Subsection Name> \nSummary: <Subsection Summary> \n**Section: <Section Name>**\nSummary: <Section Summary>\n"),
         HumanMessage(content=extractedText)
     ]
     result = model.invoke(messages)

@@ -103,7 +103,7 @@ export default function Home() {
       Mind Mapper
       </header>
       <header className={styles.header}>
-        <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer">
+        <a href="https://github.com/SujalKThapa/MindMapper" target="_blank" rel="noopener noreferrer">
           <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" className={styles.githubIcon} alt="GitHub Repo" />
         </a>
       </header>
