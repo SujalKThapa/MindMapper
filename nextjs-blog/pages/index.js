@@ -7,7 +7,7 @@ const handleButtonClick = () => {
   document.getElementById('pdfUpload').click();
 };
 
-const handleFileChange = async (event, showResult, imageHtml) => {
+const handleFileChange = async (event, showResult, imageHtml, setLoading) => {
   console.log('File input changed');
   const file = event.target.files[0];
   if (file && file.type === 'application/pdf') {
@@ -16,6 +16,8 @@ const handleFileChange = async (event, showResult, imageHtml) => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('name', 'Sujal');
+
+    setLoading(true); // Start loading
 
     try {
       const response = await fetch('https://mindmapconverter.agreeablesmoke-94d8f4cf.eastus.azurecontainerapps.io/api/http_trigger?code=Vah2HQvHTNBucLKepYzKtRicsFYQagyq4H4f6eWoxAnpAzFunKTPtQ%3D%3D', {
@@ -34,6 +36,8 @@ const handleFileChange = async (event, showResult, imageHtml) => {
       }
     } catch (error) {
       console.error('Error uploading file: ', error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   } else {
     alert('Please select a PDF file');
@@ -43,11 +47,37 @@ const handleFileChange = async (event, showResult, imageHtml) => {
 export default function Home() {
   const [imageHtml, setImageHtml] = useState('');
   const [isResultVisible, setIsResultVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Loading state
 
   const showResult = (html) => {
     console.log("Setting result HTML");
     setImageHtml(html);
     setIsResultVisible(true);
+  };
+
+  const downloadImage = () => {
+    const link = document.createElement('a');
+    link.href = extractImageUrl(imageHtml);
+    link.download = 'mindmap.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const openImage = () => {
+    const link = document.createElement('a');
+    link.href = extractImageUrl(imageHtml);
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const extractImageUrl = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    const img = div.querySelector('img');
+    return img ? img.src : '';
   };
 
   // Added useEffect to prevent infinite re-renders
@@ -65,10 +95,13 @@ export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Create Next App</title>
+        <title>AI Mind Mapper | PDF to Mind Map using Gemini AI</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <header className={styles.header2}>
+      <img src="https://i.postimg.cc/bJ3sKc5B/images-2.png"/>
+      Mind Mapper
+      </header>
       <header className={styles.header}>
         <a href="https://github.com/your-repo" target="_blank" rel="noopener noreferrer">
           <img src="https://cdn-icons-png.flaticon.com/512/25/25231.png" className={styles.githubIcon} alt="GitHub Repo" />
@@ -87,14 +120,23 @@ export default function Home() {
             <h3 className={styles.subTitle2}>
               Seamless summarization and transformation<br/>of your personal, educational and business<br/>documents into easy-to-digest Mind Maps.
             </h3>
-            <button className={styles.uploadButton} onClick={handleButtonClick}>Upload PDF</button>
-            <input
-              type='file'
-              id='pdfUpload'
-              accept='application/pdf'
-              style={{display:'none'}}
-              onChange={(event) => handleFileChange(event, showResult, imageHtml)}
-            />
+            {!isResultVisible && (
+              <>
+                <div className={styles.pdfSection}>
+                <button className={styles.uploadButton} onClick={handleButtonClick}>
+                  Upload PDF
+                </button>
+                <input
+                  type='file'
+                  id='pdfUpload'
+                  accept='application/pdf'
+                  style={{display:'none'}}
+                  onChange={(event) => handleFileChange(event, showResult, imageHtml, setIsLoading)}
+                />
+                {isLoading && <div className={styles.loadingCircle}></div>}
+                </div>
+              </>
+            )}
           </div>
           <img src='https://i.postimg.cc/TPy6QKBp/Pdf2-Mind-Map.png' className={styles.image}/>
         </div>
@@ -104,7 +146,7 @@ export default function Home() {
         <div className={styles.resultBlock}>
           <h3>Result:</h3>
           {imageHtml && <div className={styles.innerImg} dangerouslySetInnerHTML={{ __html: imageHtml }} />}
-          <button className={styles.anotherButton}>Another Action</button>
+          <button className={styles.anotherButton} onClick={downloadImage}>Download Image</button>
         </div>
       )}
       
