@@ -7,6 +7,69 @@
   align-items: center;
 }
 
+.tooltipContainer {
+  position: relative;
+  display: inline-block;
+}
+
+
+
+.criteriaList {
+  margin-top: 5px;
+  list-style-type: disc; /* Or any other list style you prefer */
+  padding-left: 20px;
+}
+
+.criteriaTitle{
+  margin-left: 1rem;
+}
+
+
+.criteriaList li {
+  margin-top: 15px;
+}
+
+.questionMark {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-top: 10px;
+  background-color: rgb(45, 45, 45);
+  color: white;
+  text-align: center;
+  line-height: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
+.questionMark:hover{
+  background-color: rgb(80, 80, 80);
+}
+
+
+.tooltipText {
+  visibility: hidden;
+  width: 200px;
+  opacity: 97%;
+  background-color: rgb(26, 26, 26);
+  color: white;
+  text-align: left;
+  border-radius: 10px;
+  padding: 10px;
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 90%;
+  margin-left: -100px; /* Center the tooltip */
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.tooltipContainer:hover .tooltipText {
+  visibility: visible;
+}
+
+
 .header {
   width: 100%;
   display: flex;
@@ -182,6 +245,15 @@
 
 
 @media (max-width: 900px) {
+
+  
+.questionMark {
+  
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+}
+
   .header2 img{
     width: 40px;
     height: 40px;

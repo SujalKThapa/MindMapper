@@ -1,6 +1,8 @@
 import Head from 'next/head';
 import { useState, useEffect } from 'react';
+import { PDFDocument } from 'pdf-lib';
 import styles from '../styles/Home.module.css';
+import Swal from 'sweetalert2';
 
 const handleButtonClick = () => {
   console.log("Button clicked");
@@ -13,17 +15,38 @@ const handleFileChange = async (event, showResult, imageHtml, setLoading) => {
   if (file && file.type === 'application/pdf') {
     console.log('PDF file selected: ', file);
 
+    // Check PDF properties
+    const arrayBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(arrayBuffer);
+    const numberOfPages = pdfDoc.getPageCount();
+
+    if (numberOfPages > 30) {
+      Swal.fire('Please select a PDF file with 30 pages or less');
+      return;
+    }
+
+    if (numberOfPages === 0) {
+      Swal.fire('The selected PDF file has no pages');
+      return;
+    }
+
     const formData = new FormData();
     formData.append('file', file);
     formData.append('name', 'Sujal');
 
-    setLoading(true); // Start loading
+    setLoading(true);
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+      Swal.fire('Loading is taking too long. Please try again later.');
+    }, 30000);
 
     try {
       const response = await fetch('https://mindmapconverter.agreeablesmoke-94d8f4cf.eastus.azurecontainerapps.io/api/http_trigger?code=Vah2HQvHTNBucLKepYzKtRicsFYQagyq4H4f6eWoxAnpAzFunKTPtQ%3D%3D', {
         method: 'POST',
         body: formData
       });
+
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const result = await response.json();
@@ -37,17 +60,17 @@ const handleFileChange = async (event, showResult, imageHtml, setLoading) => {
     } catch (error) {
       console.error('Error uploading file: ', error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false); 
     }
   } else {
-    alert('Please select a PDF file');
+    Swal.fire('Please select a PDF file');
   }
 };
 
 export default function Home() {
   const [imageHtml, setImageHtml] = useState('');
   const [isResultVisible, setIsResultVisible] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const showResult = (html) => {
     console.log("Setting result HTML");
@@ -80,7 +103,6 @@ export default function Home() {
     return img ? img.src : '';
   };
 
-  // Added useEffect to prevent infinite re-renders
   useEffect(() => {
     console.log("Home component mounted");
     return () => {
@@ -119,24 +141,34 @@ export default function Home() {
             </h2>
             <h3 className={styles.subTitle2}>
               Seamless summarization and transformation<br/>of your personal, educational and business<br/>documents into easy-to-digest Mind Maps.
-            </h3>
-            {!isResultVisible && (
-              <>
-                <div className={styles.pdfSection}>
-                <button className={styles.uploadButton} onClick={handleButtonClick}>
-                  Upload PDF
-                </button>
-                <input
-                  type='file'
-                  id='pdfUpload'
-                  accept='application/pdf'
-                  style={{display:'none'}}
-                  onChange={(event) => handleFileChange(event, showResult, imageHtml, setIsLoading)}
-                />
-                {isLoading && <div className={styles.loadingCircle}></div>}
-                </div>
-              </>
-            )}
+            </h3>{!isResultVisible && (
+  <>
+    <div className={styles.pdfSection}>
+      <button className={styles.uploadButton} onClick={handleButtonClick}>
+        Upload PDF
+      </button>
+      <input
+        type='file'
+        id='pdfUpload'
+        accept='application/pdf'
+        style={{ display: 'none' }}
+        onChange={(event) => handleFileChange(event, showResult, imageHtml, setIsLoading)}
+      />
+      <div className={styles.tooltipContainer}>
+        <div className={styles.questionMark}>?</div>
+        <div className={styles.tooltipText}>
+          <div className={styles.criteriaTitle}><b>Upload Criteria:</b></div>
+          <ul className={styles.criteriaList}>
+          <li>The PDF must have extractable text.</li>
+          <li>PDFs larger than 30 pages are to be avoided.</li>
+          </ul>
+        </div>
+      </div>
+      {isLoading && <div className={styles.loadingCircle}></div>}
+    </div>
+  </>
+)}
+
           </div>
           <img src='https://i.postimg.cc/TPy6QKBp/Pdf2-Mind-Map.png' className={styles.image}/>
         </div>
@@ -155,18 +187,7 @@ export default function Home() {
         body {
           padding: 0;
           margin: 0;
-          font-family:
-            -apple-system,
-            BlinkMacSystemFont,
-            Segoe UI,
-            Roboto,
-            Oxygen,
-            Ubuntu,
-            Cantarell,
-            Fira Sans,
-            Droid Sans,
-            Helvetica Neue,
-            sans-serif;
+          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
         }
         * {
           box-sizing: border-box;

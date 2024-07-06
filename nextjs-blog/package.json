@@ -6,9 +6,16 @@
     "start": "next start"
   },
   "dependencies": {
+    "alertify": "^0.3.0",
+    "alertifyjs": "^1.14.0",
     "next": "latest",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdfjs-dist": "^4.4.168",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "sweetalert": "^2.1.2",
+    "sweetalert2": "^11.12.2"
   },
   "engines": {
     "node": ">=18"
