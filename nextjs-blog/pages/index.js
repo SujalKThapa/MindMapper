@@ -185,7 +185,7 @@ export default function Home() {
 <div className={styles.newContent}>
   <div className={styles.newCard}>
     <div className={styles.newMark}>1</div>
-    <div className={styles.newPara}>Make sure your PDF has extractable text, that is, text that can be selected, copied, pasted, etc.</div>
+    <div className={styles.newPara}>Make sure your PDF has extractable content, that is, text that can be selected, copied, pasted, etc.</div>
   </div>
 
   
