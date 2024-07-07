@@ -38,7 +38,7 @@ const handleFileChange = async (event, showResult, imageHtml, setLoading) => {
     const timeoutId = setTimeout(() => {
       setLoading(false);
       Swal.fire('Loading is taking too long. Please try again later.');
-    }, 30000);
+    }, 60000);
 
     try {
       const response = await fetch('https://mindmapconverter.agreeablesmoke-94d8f4cf.eastus.azurecontainerapps.io/api/http_trigger?code=Vah2HQvHTNBucLKepYzKtRicsFYQagyq4H4f6eWoxAnpAzFunKTPtQ%3D%3D', {
@@ -154,16 +154,6 @@ export default function Home() {
         style={{ display: 'none' }}
         onChange={(event) => handleFileChange(event, showResult, imageHtml, setIsLoading)}
       />
-      <div className={styles.tooltipContainer}>
-        <div className={styles.questionMark}>?</div>
-        <div className={styles.tooltipText}>
-          <div className={styles.criteriaTitle}><b>Upload Criteria:</b></div>
-          <ul className={styles.criteriaList}>
-          <li>The PDF must have extractable text.</li>
-          <li>PDFs larger than 30 pages are to be avoided.</li>
-          </ul>
-        </div>
-      </div>
       {isLoading && <div className={styles.loadingCircle}></div>}
     </div>
   </>
@@ -172,7 +162,14 @@ export default function Home() {
           </div>
           <img src='https://i.postimg.cc/TPy6QKBp/Pdf2-Mind-Map.png' className={styles.image}/>
         </div>
+
+
+        
+
+
       </main>
+
+      
 
       {isResultVisible && (
         <div className={styles.resultBlock}>
@@ -181,6 +178,27 @@ export default function Home() {
           <button className={styles.anotherButton} onClick={downloadImage}>Download Image</button>
         </div>
       )}
+
+      
+
+
+<div className={styles.newContent}>
+  <div className={styles.newCard}>
+    <div className={styles.newMark}>1</div>
+    <div className={styles.newPara}>Make sure your PDF has extractable text, that is, text that can be selected, copied, pasted, etc.</div>
+  </div>
+
+  
+  <div className={styles.newCard}>
+    <div className={styles.newMark}>2</div>
+    <div className={styles.newPara}>PDFs greater than 30 pages will be processed by an inferior model due to pricing concerns.</div>
+  </div>
+</div>
+
+
+
+
+      
       
       <style jsx global>{`
         html,

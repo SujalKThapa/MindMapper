@@ -29,6 +29,34 @@
   margin-top: 15px;
 }
 
+.newPara{
+  color: gray;
+  margin-top: -2rem;
+  font-weight: 700;
+  width: 30rem;
+  font-size: 1.2rem;
+}
+
+
+.newCard{
+  margin-bottom: 3rem;
+}
+
+
+.newMark {
+  width: 20px;
+  height: 20px;
+  margin-left: -3rem;
+  border-radius: 50%;
+  background-color: rgb(45, 45, 45);
+  color: white;
+  text-align: center;
+  line-height: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+
 .questionMark {
   width: 20px;
   height: 20px;
@@ -122,7 +150,19 @@
   align-items: center;
   justify-content: center;
   flex-direction: row;
+  margin-top: 5rem;
 }
+
+
+
+.newContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 5rem;
+}
+
 
 .image {
   width: 300px;
@@ -246,9 +286,34 @@
 
 @media (max-width: 900px) {
 
+.newCard{
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 40%;
+}
+
+.newPara{
+  width: 15rem;
+}
+
+
+.newMark{
+  margin-left: 0rem;
+  margin-right: 1rem;
+  margin-top: -4rem;
+  margin-bottom: 10px;
+  width: 25px;
+  height: 25px;
+  line-height: 22px;
+}
+
+
+.newContent {
+  flex-direction: column;
+  align-items: center;
+}
   
 .questionMark {
-  
   width: 25px;
   height: 25px;
   line-height: 25px;
