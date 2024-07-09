@@ -2,7 +2,7 @@
 A tool for generating pdf summaries as mindmaps. Live demo @ https://mindmapai.vercel.app/
 
 # Demonstration Video
-A video showcasing the application and the considerations to be taken into account when using the tool. 
+A video showcasing the application and the considerations to be taken into account when using the tool. <br/>
 **[Note: The latest version of the application has shifted to using Google's Gemini models rather than OpenAI's GPT models]**
 
 
