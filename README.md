@@ -37,7 +37,7 @@ The application architecture consists of a Next.js website hosted on a Vercel su
   A Python function that takes a PDF document as input and returns an encoded image of the mindmap powers the serverless function, and works in three simple steps: 
   
   1) Extracting the text from PDF
-  2) Sending the text content alongside a custom prompt to an OpenAI **[Now replaced with Gemini]** API
+  2) Sending the text content alongside a custom prompt to an OpenAI API **[Now replaced by Gemini]** 
   3) Turning the structured response from the API into a diagram using the Graphviz python library.
 <br/>
 
