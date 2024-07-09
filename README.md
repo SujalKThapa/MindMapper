@@ -1,6 +1,6 @@
 # MindMapper
 A tool for generating pdf summaries as mindmaps. Live demo @ https://mindmapai.vercel.app/
-
+ <br/> <br/>
 # Demonstration Video
 A video showcasing the application and the considerations to be taken into account when using the tool. <br/>
 **[Note: The latest version of the application has shifted to using Google's Gemini models rather than OpenAI's GPT models]**
@@ -9,6 +9,7 @@ A video showcasing the application and the considerations to be taken into accou
 https://github.com/SujalKThapa/MindMapper/assets/136220535/3216ba4a-f457-4ce1-8b26-cdef61bbd454
 
 
+<br/>
 
 # Technologies Used and Architecture
 
@@ -21,26 +22,29 @@ https://github.com/SujalKThapa/MindMapper/assets/136220535/3216ba4a-f457-4ce1-8b
 
   
 The application architecture consists of a Next.js website hosted on a Vercel subdomain, which uses Azure's serverless functions to process PDFs and generate visual summaries/mindmaps. These mindmaps are then sent back to the website from the serverless function before finally being displayed to the user.
-
+<br/>
+<br/>
 
   ## Next.js and Vercel
   The website was built using Next.js, a React framework that supports Server-Side Rendering (SSR). The backend, implemented with Node.js, primarily involved sending HTTP requests with attached PDFs to a serverless function hosted on Azure and waiting for the response.
   The files for the website were then uploaded to the repository you are currently viewing, and then hosted on Vercel using its GitHub integration. 
 
   Also worth noting, Vercel's integration with the GitHub repository allows the replication of features typically reserved for a CI/CD pipeline, such as automatic deployments of pull requests.
-
-
+ <br/> 
+<br/>
+ 
   ## Python (w/Graphviz)
   A Python function that takes a PDF document as input and returns an encoded image of the mindmap powers the serverless function, and works in three simple steps: 
   
   1) Extracting the text from PDF
   2) Sending the text content alongside a custom prompt to an OpenAI **[Now replaced with Gemini]** API
   3) Turning the structured response from the API into a diagram using the Graphviz python library.
+<br/>
 
-     
   ## Docker
   The files for said Python function were then containerized using Docker before being uploaded to Docker Hub, this was done in order to streamline the process of installing the necessary dependencies and manage configurations, enabling the smooth operation of the function in the serverless environment.
-
+ <br/>
+<br/>
 
  ## Azure functions
  Azure Functions is an example of "Functions as a Service" (FaaS). In this computing model, a function is a piece of code deployed to the cloud—in this case, Microsoft Azure. This allows developers to run event-driven code without having to allocate or manage infrastructure.
@@ -50,7 +54,7 @@ The primary reasons for using Azure Functions for this project were twofold:
 1) Cost-effectiveness: Unlike with other compute services, such as Azure Virtual Machines, which require 24/7 operational costs, Azure Functions bills the developer only for the function calls and the execution time. This makes it ideal for this project, where compute services are needed only when PDFs are uploaded, and not around the clock.
 
 2) Scalability and Convenience: Since Azure functions are a managed service, meaning that Azure, not us, handles the allocation of resources and isolation of function instances from one another thus making them highly scalable. It is also easy to set-up and convenient to both use and maintain.
-
+<br/>
 
 ## Gemini API
 A request is sent to Gemini with the text content of the PDF prefixed by the following custom prompt:
@@ -65,7 +69,7 @@ The response, which is intended to be genereated in the specified format is then
 <br/><br/>
 If the subject matter of a section child node is complex enough to warrant sub-sections, then the same piece of code will also turn the sub-sections into child nodes, with the section node as their parents. As shown in the demo video.
 
-<br/>
+<br/> <br/>
 
 # Author's Note
 Though originally created simply as a personal project to put on my CV/Resume, I later decided to spend a little extra time to turn the project into an actual tool and release it on ProductHunt for public use. So if you found the tool useful, please do follow the project on ProductHunt.
